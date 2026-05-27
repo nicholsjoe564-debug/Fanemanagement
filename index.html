@@ -53,6 +53,7 @@
     font-family: 'DM Sans', sans-serif; font-size: 15px; outline: none; transition: border-color 0.2s;
   }
   .field input:focus, .field select:focus, .field textarea:focus { border-color: var(--gold); }
+  .field textarea { resize: vertical; min-height: 80px; }
 
   .btn {
     display: inline-flex; align-items: center; justify-content: center; gap: 8px;
@@ -147,23 +148,13 @@
     width: min(460px, 94vw); padding: 44px 38px;
   }
   .quiz-q { font-family: 'Bebas Neue', sans-serif; font-size: 28px; margin-bottom: 22px; }
-  .quiz-option {
-    background: var(--dark3); border: 1px solid rgba(255,255,255,0.06);
-    padding: 13px 18px; cursor: pointer; margin-bottom: 10px;
-  }
-  .quiz-option.selected { border-color: var(--gold); background: rgba(201,168,76,0.08); color: var(--gold); }
 
   .modal {
-    position: fixed; inset: 0; background: rgba(0,0,0,0.9); display: none;
+    position: fixed; inset: 0; background: rgba(0,0,0,0.88); display: none;
     align-items: center; justify-content: center; z-index: 200;
   }
   .modal-content {
     background: var(--dark2); padding: 32px; width: min(500px, 90%); border: 1px solid var(--gold);
-  }
-  .toast {
-    position: fixed; bottom: 22px; right: 22px;
-    background: var(--dark2); border-left: 3px solid var(--gold);
-    padding: 13px 18px; z-index: 9999;
   }
 </style>
 </head>
@@ -203,7 +194,7 @@
       <div class="link-grid" id="link-grid"></div>
     </div>
     <div id="tab-fans" class="tab-panel">
-      <div class="section-header"><div class="section-title">Fan Sign-ups &amp; Their Answers</div></div>
+      <div class="section-header"><div class="section-title">Fan Sign-ups &amp; Full Answers</div></div>
       <div id="fans-container"></div>
     </div>
   </div>
@@ -247,8 +238,8 @@
     <h2 style="color:var(--gold)">Account Settings</h2>
     <div class="field"><label>New Username</label><input type="text" id="new-username" value="admin"></div>
     <div class="field"><label>New Password</label><input type="password" id="new-password" placeholder="Leave empty to keep current"></div>
-    <button class="btn btn-gold" onclick="saveSettings()">Save Changes</button>
-    <button class="btn btn-outline" onclick="closeSettings()">Cancel</button>
+    <button class="btn btn-gold btn-full" onclick="saveSettings()">Save Changes</button>
+    <button class="btn btn-outline btn-full" onclick="closeSettings()">Cancel</button>
   </div>
 </div>
 
@@ -260,22 +251,15 @@ let currentPassword = "admin123";
 let S = {
   links: [
     {
-      id:'warren-zeiders', 
-      celeb:'Warren Zeiders', 
-      mgmt:'Fame Management',
+      id:'warren-zeiders', celeb:'Warren Zeiders', mgmt:'Fame Management',
       welcome:"You've been personally selected for a private fan experience.",
-      slug:'warren-zeiders', 
-      status:'active',
+      slug:'warren-zeiders', status:'active',
       fans:[]
     }
   ],
-  activeLinkId: null,
-  activeFanId: null,
-  fanLinkId: null,
-  fanId: null,
-  fanName: null,
-  quizStep: 0,
-  quizAnswers: {}
+  activeLinkId: null, activeFanId: null,
+  fanLinkId: null, fanId: null, fanName: null,
+  quizStep: 0, quizAnswers: {}
 };
 
 const QUIZ = [
@@ -290,17 +274,13 @@ function init() {
   if (hash.startsWith('fan/')) {
     const slug = hash.replace('fan/','');
     const link = S.links.find(l => l.slug === slug);
-    if (link) {
-      S.fanLinkId = link.id;
-      showFanLanding(link);
-      return;
-    }
+    if (link) { S.fanLinkId = link.id; showFanLanding(link); return; }
   }
   showScreen('screen-login');
 }
 
 function showScreen(id) {
-  document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+  document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));
   document.getElementById(id).classList.add('active');
 }
 
@@ -328,7 +308,7 @@ function saveSettings() {
   const newPass = document.getElementById('new-password').value.trim();
   if (newUser) currentUsername = newUser;
   if (newPass) currentPassword = newPass;
-  alert(`✅ Updated!\nNew login → ${currentUsername} / ${currentPassword}`);
+  alert(`✅ Settings saved!\nNew login: ${currentUsername} / ${currentPassword}`);
   closeSettings();
 }
 
@@ -338,11 +318,11 @@ function renderFans() {
   S.links.forEach(link => {
     link.fans.forEach(fan => {
       html += `<tr>
-        <td><div class="fan-name-cell"><div class="fan-avatar">${fan.name ? fan.name[0] : '?'}</div>${fan.name}</div></td>
+        <td><div class="fan-name-cell"><div class="fan-avatar">${fan.name[0]}</div>${fan.name}</div></td>
         <td>${fan.answers.location || '-'}</td>
         <td>${fan.answers.fanDuration || '-'}</td>
         <td>${fan.answers.purpose ? fan.answers.purpose.substring(0,50)+'...' : '-'}</td>
-        <td><button class="btn btn-outline btn-sm" onclick="openAdminChat('${link.id}','${fan.id}')">💬 Open Chat</button></td>
+        <td><button class="btn btn-outline btn-sm" onclick="openAdminChat('${link.id}','${fan.id}')">Chat</button></td>
       </tr>`;
     });
   });
@@ -359,7 +339,7 @@ function openAdminChat(linkId, fanId) {
 }
 
 function sendManagerMsg() {
-  alert("✅ Message sent to fan (demo mode)");
+  alert("Message sent (demo mode)");
 }
 
 function showFanLanding(link) {
@@ -387,7 +367,7 @@ function renderQuizStep() {
 
 function nextQ() {
   const val = document.getElementById('qinp').value.trim();
-  if (!val) return alert("Please answer");
+  if (!val) return alert("Please answer the question");
   S.quizAnswers[QUIZ[S.quizStep].key] = val;
   if (QUIZ[S.quizStep].key === 'name') S.fanName = val;
   S.quizStep++;
@@ -400,7 +380,7 @@ function completeFanSignup() {
   const fanId = 'f' + Date.now();
   const newFan = {
     id: fanId,
-    name: S.fanName || 'New Fan',
+    name: S.fanName || 'Fan',
     answers: S.quizAnswers,
     messages: []
   };
@@ -420,11 +400,11 @@ function autoResize(el) {
 }
 
 function switchTab(name, btn) {
-  document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+  document.querySelectorAll('.tab-btn').forEach(b=>b.classList.remove('active'));
   btn.classList.add('active');
-  document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
-  document.getElementById('tab-' + name).classList.add('active');
-  if (name === 'fans') renderFans();
+  document.querySelectorAll('.tab-panel').forEach(p=>p.classList.remove('active'));
+  document.getElementById('tab-'+name).classList.add('active');
+  if (name==='fans') renderFans();
 }
 
 init();
