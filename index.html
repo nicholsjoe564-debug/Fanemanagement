@@ -6,13 +6,219 @@
 <title>Fame Management</title>
 <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:ital,wght@0,300;0,400;0,500;0,600;1,300&display=swap" rel="stylesheet">
 <style>
-  /* Full original CSS - keeping it short here for response, but all styles are preserved */
-  :root { --gold: #C9A84C; --gold-light: #E8C97A; --green: #25D366; --black: #080808; --dark2: #1A1A1A; --dark3: #252525; --white: #F5F3EE; --gray: #888; }
+  :root {
+    --gold: #C9A84C;
+    --gold-light: #E8C97A;
+    --green: #25D366;
+    --green-dark: #1aad52;
+    --black: #080808;
+    --dark: #111111;
+    --dark2: #1A1A1A;
+    --dark3: #252525;
+    --white: #F5F3EE;
+    --gray: #888;
+    --red: #E04444;
+  }
   * { margin: 0; padding: 0; box-sizing: border-box; }
-  body { background: var(--black); color: var(--white); font-family: 'DM Sans', sans-serif; min-height: 100vh; }
+  body { background: var(--black); color: var(--white); font-family: 'DM Sans', sans-serif; min-height: 100vh; overflow-x: hidden; }
+
   .screen { display: none; min-height: 100vh; }
   .screen.active { display: flex; flex-direction: column; }
-  /* ... All other styles from your original file ... */
+
+  /* LOGIN */
+  #screen-login { align-items: center; justify-content: center; background: var(--black); position: relative; overflow: hidden; }
+  #screen-login::before {
+    content: 'FAME\AMGMT';
+    white-space: pre;
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: clamp(100px, 18vw, 200px);
+    color: rgba(201,168,76,0.04);
+    position: absolute; top: 50%; left: 50%;
+    transform: translate(-50%,-50%);
+    pointer-events: none; line-height: 0.85; text-align: center;
+  }
+  .login-box {
+    background: var(--dark2); border: 1px solid rgba(201,168,76,0.2);
+    padding: 48px 40px; width: min(420px, 92vw); position: relative; z-index: 1;
+  }
+  .login-logo { font-family: 'Bebas Neue', sans-serif; font-size: 14px; letter-spacing: 5px; color: var(--gold); margin-bottom: 8px; }
+  .login-box h1 { font-family: 'Bebas Neue', sans-serif; font-size: 38px; letter-spacing: 2px; color: var(--white); margin-bottom: 6px; }
+  .login-box p { color: var(--gray); font-size: 14px; margin-bottom: 32px; }
+
+  .field { margin-bottom: 18px; }
+  .field label { display: block; font-size: 11px; letter-spacing: 2px; text-transform: uppercase; color: var(--gold); margin-bottom: 8px; }
+  .field input, .field select, .field textarea {
+    width: 100%; background: var(--dark3); border: 1px solid rgba(201,168,76,0.12);
+    color: var(--white); padding: 12px 16px;
+    font-family: 'DM Sans', sans-serif; font-size: 15px; outline: none; transition: border-color 0.2s;
+  }
+  .field input:focus, .field select:focus, .field textarea:focus { border-color: var(--gold); }
+  .field textarea { resize: vertical; min-height: 80px; }
+
+  .btn {
+    display: inline-flex; align-items: center; justify-content: center; gap: 8px;
+    padding: 13px 24px; font-family: 'DM Sans', sans-serif;
+    font-size: 13px; font-weight: 600; letter-spacing: 1px; text-transform: uppercase;
+    cursor: pointer; border: none; transition: all 0.2s; text-decoration: none;
+  }
+  .btn-gold { background: var(--gold); color: var(--black); }
+  .btn-gold:hover { background: var(--gold-light); }
+  .btn-outline { background: transparent; color: var(--gold); border: 1px solid rgba(201,168,76,0.4); }
+  .btn-outline:hover { background: rgba(201,168,76,0.08); border-color: var(--gold); }
+  .btn-green { background: var(--green); color: #fff; }
+  .btn-green:hover { background: var(--green-dark); }
+  .btn-danger { background: transparent; color: var(--red); border: 1px solid rgba(224,68,68,0.4); }
+  .btn-danger:hover { background: rgba(224,68,68,0.08); }
+  .btn-full { width: 100%; }
+  .btn-sm { padding: 7px 14px; font-size: 11px; }
+
+  /* ADMIN */
+  #screen-admin { flex-direction: column; background: var(--black); }
+  .admin-header {
+    background: var(--dark2); border-bottom: 1px solid rgba(201,168,76,0.12);
+    padding: 14px 24px; display: flex; align-items: center; justify-content: space-between;
+    position: sticky; top: 0; z-index: 100;
+  }
+  .logo { font-family: 'Bebas Neue', sans-serif; font-size: 22px; color: var(--gold); letter-spacing: 4px; }
+  .logo span { color: var(--white); }
+  .admin-tabs {
+    display: flex; border-bottom: 1px solid rgba(255,255,255,0.06);
+    background: var(--dark); padding: 0 24px;
+  }
+  .tab-btn {
+    background: none; border: none; color: var(--gray);
+    font-family: 'DM Sans', sans-serif; font-size: 12px; font-weight: 600;
+    letter-spacing: 1.5px; text-transform: uppercase;
+    padding: 13px 18px; cursor: pointer;
+    border-bottom: 2px solid transparent; margin-bottom: -1px; transition: all 0.2s;
+  }
+  .tab-btn.active { color: var(--gold); border-bottom-color: var(--gold); }
+
+  .section-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 22px; }
+  .section-title { font-family: 'Bebas Neue', sans-serif; font-size: 24px; letter-spacing: 2px; }
+  .link-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(310px, 1fr)); gap: 14px; }
+
+  .link-card {
+    background: var(--dark2); border: 1px solid rgba(255,255,255,0.06);
+    padding: 22px; transition: border-color 0.2s;
+  }
+  .link-card:hover { border-color: rgba(201,168,76,0.25); }
+  .link-card-top { display: flex; align-items: flex-start; justify-content: space-between; margin-bottom: 14px; }
+  .celeb-name { font-family: 'Bebas Neue', sans-serif; font-size: 21px; color: var(--white); letter-spacing: 1px; }
+  .celeb-mgmt-label { font-size: 11px; color: var(--gold); letter-spacing: 1px; margin-top: 2px; }
+  .link-status { font-size: 10px; padding: 3px 9px; letter-spacing: 1px; text-transform: uppercase; flex-shrink: 0; }
+  .status-active { background: rgba(37,211,102,0.12); color: var(--green); }
+
+  .wa-preview {
+    background: var(--dark3); border-left: 3px solid var(--green);
+    padding: 12px 14px; margin-bottom: 14px;
+  }
+  .wa-preview-title { font-size: 13px; font-weight: 600; color: var(--white); margin-bottom: 4px; }
+  .wa-preview-url { font-size: 12px; color: #4FC3F7; word-break: break-all; }
+
+  .fans-table { width: 100%; border-collapse: collapse; }
+  .fans-table th {
+    text-align: left; font-size: 10px; letter-spacing: 2px; text-transform: uppercase;
+    color: var(--gold); padding: 10px 14px; border-bottom: 1px solid rgba(201,168,76,0.15);
+  }
+  .fans-table td { padding: 13px 14px; border-bottom: 1px solid rgba(255,255,255,0.04); font-size: 14px; }
+  .fans-table tr:hover td { background: rgba(201,168,76,0.03); }
+  .fan-name-cell { display: flex; align-items: center; gap: 11px; }
+  .fan-avatar {
+    width: 34px; height: 34px; border-radius: 50%;
+    background: linear-gradient(135deg, var(--gold), #7A4E10);
+    display: flex; align-items: center; justify-content: center;
+    font-family: 'Bebas Neue', sans-serif; font-size: 15px; color: var(--black); flex-shrink: 0;
+  }
+
+  .filter-pills { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 20px; }
+  .pill {
+    background: var(--dark3); border: 1px solid rgba(255,255,255,0.08);
+    color: var(--gray); font-size: 11px; letter-spacing: 1px; padding: 6px 14px;
+    cursor: pointer; transition: all 0.2s; text-transform: uppercase; font-weight: 600;
+  }
+  .pill.active { background: rgba(201,168,76,0.12); border-color: var(--gold); color: var(--gold); }
+
+  /* CHAT */
+  #screen-chat { flex-direction: column; }
+  .chat-header {
+    background: var(--dark2); border-bottom: 1px solid rgba(201,168,76,0.12);
+    padding: 14px 18px; display: flex; align-items: center; gap: 14px;
+    position: sticky; top: 0; z-index: 10;
+  }
+  .back-btn {
+    background: none; border: 1px solid rgba(201,168,76,0.3); color: var(--gold);
+    padding: 7px 13px; cursor: pointer; transition: all 0.2s;
+  }
+  .chat-header-name { font-family: 'Bebas Neue', sans-serif; font-size: 18px; color: var(--white); letter-spacing: 1px; }
+  .chat-messages { flex: 1; overflow-y: auto; padding: 20px 16px; display: flex; flex-direction: column; gap: 14px; }
+  .msg { display: flex; gap: 9px; max-width: 75%; }
+  .msg.from-manager { margin-left: auto; flex-direction: row-reverse; }
+  .msg-avatar {
+    width: 32px; height: 32px; border-radius: 50%; flex-shrink: 0;
+    display: flex; align-items: center; justify-content: center;
+    font-family: 'Bebas Neue', sans-serif; font-size: 13px;
+  }
+  .msg.from-fan .msg-avatar { background: linear-gradient(135deg, #3a3a3a, #1a1a1a); color: var(--white); }
+  .msg.from-manager .msg-avatar { background: var(--gold); color: var(--black); }
+  .msg-bubble { padding: 11px 15px; font-size: 14px; line-height: 1.55; }
+  .msg.from-fan .msg-bubble { background: var(--dark3); color: var(--white); }
+  .msg.from-manager .msg-bubble { background: rgba(201,168,76,0.13); border: 1px solid rgba(201,168,76,0.22); color: var(--white); }
+  .msg-time { font-size: 10px; color: var(--gray); margin-top: 3px; }
+
+  /* FAN LANDING & QUIZ */
+  #screen-fan-landing { align-items: center; justify-content: center; background: var(--black); position: relative; }
+  .fan-card {
+    background: var(--dark2); border: 1px solid rgba(201,168,76,0.18);
+    width: min(460px, 94vw); padding: 44px 38px;
+  }
+  .fan-celeb-name { font-family: 'Bebas Neue', sans-serif; font-size: 54px; color: var(--white); line-height: 0.95; margin-bottom: 4px; }
+  .fan-mgmt-name { font-family: 'Bebas Neue', sans-serif; font-size: 18px; color: var(--gold); letter-spacing: 2px; margin-bottom: 20px; }
+
+  #screen-fan-quiz { align-items: center; justify-content: center; background: var(--black); padding: 20px; }
+  .quiz-card {
+    background: var(--dark2); border: 1px solid rgba(201,168,76,0.18);
+    width: min(460px, 100%); padding: 36px 32px;
+  }
+  .quiz-progress-bar { height: 2px; background: var(--dark3); margin-bottom: 32px; position: relative; overflow: hidden; }
+  .quiz-progress-fill { height: 100%; background: var(--gold); transition: width 0.4s ease; }
+  .quiz-q { font-family: 'Bebas Neue', sans-serif; font-size: 28px; color: var(--white); letter-spacing: 0.5px; margin-bottom: 22px; line-height: 1.15; }
+  .quiz-option {
+    background: var(--dark3); border: 1px solid rgba(255,255,255,0.06);
+    padding: 13px 18px; cursor: pointer; font-size: 14px; color: var(--white);
+    transition: all 0.18s;
+  }
+  .quiz-option.selected { border-color: var(--gold); background: rgba(201,168,76,0.08); color: var(--gold); }
+
+  /* FAN CHAT */
+  #screen-fan-chat { flex-direction: column; }
+  .fan-chat-header {
+    background: var(--dark2); border-bottom: 1px solid rgba(201,168,76,0.12);
+    padding: 14px 18px; display: flex; align-items: center; gap: 12px;
+  }
+  .verified-star {
+    width: 38px; height: 38px; border-radius: 50%; background: var(--gold);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 18px; flex-shrink: 0;
+  }
+
+  /* MODAL & TOAST */
+  .modal-overlay {
+    display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.88);
+    z-index: 200; align-items: center; justify-content: center; padding: 20px;
+  }
+  .modal-overlay.open { display: flex; }
+  .modal {
+    background: var(--dark2); border: 1px solid rgba(201,168,76,0.2);
+    width: min(500px, 100%); padding: 32px 30px;
+  }
+  .toast {
+    position: fixed; bottom: 22px; right: 22px;
+    background: var(--dark2); border-left: 3px solid var(--gold);
+    padding: 13px 18px; font-size: 13px; color: var(--white);
+    z-index: 9999; animation: toastIn 0.3s ease;
+  }
+  @keyframes toastIn { from { opacity:0; transform: translateX(16px); } to { opacity:1; transform: translateX(0); } }
 </style>
 </head>
 <body>
@@ -23,74 +229,409 @@
     <div class="login-logo">★ FAME MANAGEMENT</div>
     <h1>Admin Portal</h1>
     <p>Manage your celebrity links and fan conversations</p>
-    <div class="field"><label>Username</label><input type="text" id="login-user" placeholder="admin"></div>
-    <div class="field"><label>Password</label><input type="password" id="login-pass" placeholder="Enter password"></div>
-    <button class="btn btn-gold btn-full" onclick="adminLogin()">Enter Dashboard →</button>
-    <p style="text-align:center; margin-top:20px; font-size:12px; color:#888;">Default: admin / admin123</p>
+    <div class="field"><label>Username</label><input type="text" id="login-user" placeholder="admin" value="admin"></div>
+    <div class="field"><label>Password</label><input type="password" id="login-pass" placeholder="••••••••" value="admin123"></div>
+    <button class="btn btn-gold btn-full" onclick="adminLogin()" style="margin-top:6px">Enter Dashboard →</button>
   </div>
 </div>
 
-<!-- Other screens (fan landing, quiz, chat, etc.) remain as in your original -->
+<!-- ADMIN DASHBOARD -->
+<div id="screen-admin" class="screen">
+  <div class="admin-header">
+    <div class="logo">★ FAME <span>MGMT</span></div>
+    <button class="btn btn-outline btn-sm" onclick="showScreen('screen-login')">Sign Out</button>
+  </div>
+  <div class="admin-tabs">
+    <button class="tab-btn active" onclick="switchTab('links',this)">My Links</button>
+    <button class="tab-btn" onclick="switchTab('fans',this)">Fans &amp; Chats</button>
+  </div>
+  <div class="admin-content">
+    <div id="tab-links" class="tab-panel active">
+      <div class="section-header">
+        <div class="section-title">Celebrity Links</div>
+        <button class="btn btn-gold btn-sm" onclick="openCreateModal()">+ New Link</button>
+      </div>
+      <div class="link-grid" id="link-grid"></div>
+    </div>
+    <div id="tab-fans" class="tab-panel">
+      <div class="section-header"><div class="section-title">Fan Sign-ups</div></div>
+      <div class="filter-pills" id="filter-pills"></div>
+      <div id="fans-container"></div>
+    </div>
+  </div>
+</div>
+
+<!-- ADMIN CHAT -->
+<div id="screen-chat" class="screen">
+  <div class="chat-header">
+    <button class="back-btn" onclick="goBackToFans()">← Back</button>
+    <div class="chat-header-info">
+      <div class="chat-header-name" id="chat-fan-name">Fan</div>
+      <div class="chat-header-sub" id="chat-fan-sub">Celeb fan</div>
+    </div>
+    <div class="manager-pill" id="chat-mgmt-pill">Mgmt</div>
+  </div>
+  <div class="chat-messages" id="chat-messages"></div>
+  <div class="chat-input-bar">
+    <textarea id="chat-input" rows="1" placeholder="Message as management…" oninput="autoResize(this)" onkeydown="if(event.key==='Enter'&&!event.shiftKey){event.preventDefault();sendManagerMsg();}"></textarea>
+    <button class="send-btn" onclick="sendManagerMsg()">Send</button>
+  </div>
+</div>
+
+<!-- FAN LANDING -->
+<div id="screen-fan-landing" class="screen">
+  <div class="fan-card">
+    <div class="fan-eyebrow">★ Official Management Portal</div>
+    <div class="fan-celeb-name" id="fan-celeb-display">Warren Zeiders</div>
+    <div class="fan-mgmt-name" id="fan-mgmt-display">Fame Management</div>
+    <div class="fan-welcome" id="fan-welcome-text">You've been invited to connect with the official management team.</div>
+    <button class="btn btn-gold btn-full" onclick="startFanQuiz()">Request Access →</button>
+  </div>
+</div>
+
+<!-- FAN QUIZ -->
+<div id="screen-fan-quiz" class="screen">
+  <div class="quiz-card">
+    <div class="quiz-progress-bar"><div class="quiz-progress-fill" id="quiz-fill" style="width:0%"></div></div>
+    <div class="quiz-step-label" id="quiz-step-label">Step 1 of 4</div>
+    <div id="quiz-body"></div>
+  </div>
+</div>
+
+<!-- FAN CHAT -->
+<div id="screen-fan-chat" class="screen">
+  <div class="fan-chat-header">
+    <div class="verified-star">★</div>
+    <div class="fan-chat-header-info">
+      <div class="fan-chat-celeb-title" id="fan-chat-title">Warren Zeiders — Fame Management</div>
+    </div>
+  </div>
+  <div class="chat-messages" id="fan-chat-messages"></div>
+  <div class="chat-input-bar">
+    <textarea id="fan-chat-input" rows="1" placeholder="Message the team…" oninput="autoResize(this)" onkeydown="if(event.key==='Enter'&&!event.shiftKey){event.preventDefault();sendFanMsg();}"></textarea>
+    <button class="send-btn" onclick="sendFanMsg()">Send</button>
+  </div>
+</div>
+
+<!-- CREATE MODAL -->
+<div class="modal-overlay" id="link-modal">
+  <div class="modal">
+    <div class="modal-title" id="modal-title">Create New Link</div>
+    <div class="field"><label>Celebrity Name</label><input type="text" id="m-celeb" placeholder="e.g. Warren Zeiders" oninput="autoSlug()"></div>
+    <div class="field"><label>Management Team Name</label><input type="text" id="m-mgmt" placeholder="e.g. Fame Management"></div>
+    <div class="field"><label>Welcome Message</label><textarea id="m-welcome" placeholder="Welcome message for fans"></textarea></div>
+    <div class="field"><label>Link Slug</label><input type="text" id="m-slug" placeholder="warren-zeiders"></div>
+    <div class="modal-actions">
+      <button class="btn btn-outline" onclick="closeModal()">Cancel</button>
+      <button class="btn btn-gold" onclick="saveLink()" id="modal-save-btn">Create Link</button>
+    </div>
+  </div>
+</div>
 
 <script>
-// ============== PERSISTENCE ==============
-let S = { links: [], fansFilter: 'all' };
-
-function loadData() {
-  const saved = localStorage.getItem('fameMgmtData');
-  if (saved) S = JSON.parse(saved);
-}
-
-function saveData() {
-  localStorage.setItem('fameMgmtData', JSON.stringify(S));
-}
-
-// ============== FAN MEMORY ==============
-function getFanKey() {
-  return 'fan_' + S.fanLinkId;
-}
-
-function init() {
-  loadData();
-  const hash = window.location.hash.slice(1);
-
-  if (hash.startsWith('fan/')) {
-    const slug = hash.replace('fan/','');
-    const link = S.links.find(l => l.slug === slug && l.status === 'active');
-    if (link) {
-      S.fanLinkId = link.id;
-
-      // Check if this fan already completed quiz
-      if (localStorage.getItem(getFanKey())) {
-        // Restore fan session
-        const savedFan = JSON.parse(localStorage.getItem(getFanKey()));
-        S.fanId = savedFan.id;
-        S.fanName = savedFan.name;
-        showScreen('screen-fan-chat');
-        renderFanChatMsgs(savedFan.messages || []);
-        return;
-      }
-
-      showFanLanding(link);
-      return;
+// STATE
+let S = {
+  links: [
+    {
+      id: 'warren-zeiders',
+      celeb: 'Warren Zeiders',
+      mgmt: 'Fame Management',
+      welcome: "You've been personally selected for a private fan experience with Warren Zeiders' official management team.",
+      slug: 'warren-zeiders',
+      status: 'active',
+      fans: []
     }
+  ],
+  activeLinkId: null,
+  activeFanId: null,
+  editingLinkId: null,
+  fanLinkId: null,
+  fanId: null,
+  fanName: null,
+  quizStep: 0,
+  quizAnswers: {},
+  fansFilter: 'all'
+};
+
+const QUIZ = [
+  { q: "What's your full name?", type: 'text', key: 'name' },
+  { q: "Where are you from?", type: 'text', key: 'location' },
+  { q: "How long have you been a fan?", type: 'options', key: 'fanDuration', opts: ['Less than a year', '1–3 years', '3–5 years', '5+ years'] },
+  { q: "What's your purpose for reaching out?", type: 'text', key: 'purpose' }
+];
+
+// UTILS
+function now() { return new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }); }
+function toast(msg) {
+  const e = document.createElement('div');
+  e.className = 'toast';
+  e.textContent = msg;
+  document.body.appendChild(e);
+  setTimeout(() => e.remove(), 3000);
+}
+
+// SCREENS
+function showScreen(id) {
+  document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+}
+
+// LOGIN
+function adminLogin() {
+  if (document.getElementById('login-user').value === 'admin' && document.getElementById('login-pass').value === 'admin123') {
+    renderLinks();
+    showScreen('screen-admin');
+  } else {
+    toast('❌ Wrong credentials — try admin / admin123');
   }
-  showScreen('screen-login');
+}
+
+// TABS
+function switchTab(name, btn) {
+  document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+  document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
+  btn.classList.add('active');
+  document.getElementById('tab-' + name).classList.add('active');
+  if (name === 'fans') renderFans();
+}
+function goBackToFans() {
+  showScreen('screen-admin');
+  renderFans();
+}
+
+// LINKS
+function renderLinks() {
+  const grid = document.getElementById('link-grid');
+  grid.innerHTML = S.links.map(l => {
+    const shareUrl = `${location.origin}${location.pathname}#fan/${l.slug}`;
+    return `<div class="link-card">
+      <div class="link-card-top">
+        <div><div class="celeb-name">${l.celeb}</div><div class="celeb-mgmt-label">${l.mgmt}</div></div>
+        <div class="link-status status-active">${l.status}</div>
+      </div>
+      <div class="wa-preview">
+        <div class="wa-preview-title">${l.celeb} – ${l.mgmt}</div>
+        <div class="wa-preview-url">${shareUrl}</div>
+      </div>
+      <div class="link-meta">Fans signed up: <strong>${l.fans.length}</strong></div>
+      <div class="link-actions">
+        <button class="btn btn-green btn-sm" onclick="copyLink('${l.slug}')">📋 Copy Link</button>
+        <button class="btn btn-outline btn-sm" onclick="editLink('${l.id}')">✏️ Edit</button>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+function copyLink(slug) {
+  const url = `${location.origin}${location.pathname}#fan/${slug}`;
+  navigator.clipboard.writeText(url).then(() => toast('✅ Link copied!'));
+}
+
+function autoSlug() {
+  const celeb = document.getElementById('m-celeb').value;
+  document.getElementById('m-slug').value = celeb.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '');
+}
+
+function openCreateModal() {
+  S.editingLinkId = null;
+  document.getElementById('modal-title').textContent = 'Create New Link';
+  document.getElementById('modal-save-btn').textContent = 'Create Link';
+  document.getElementById('m-celeb').value = '';
+  document.getElementById('m-mgmt').value = '';
+  document.getElementById('m-welcome').value = '';
+  document.getElementById('m-slug').value = '';
+  document.getElementById('link-modal').classList.add('open');
+}
+
+function editLink(id) {
+  const l = S.links.find(x => x.id === id);
+  if (!l) return;
+  S.editingLinkId = id;
+  document.getElementById('modal-title').textContent = 'Edit Link';
+  document.getElementById('modal-save-btn').textContent = 'Save Changes';
+  document.getElementById('m-celeb').value = l.celeb;
+  document.getElementById('m-mgmt').value = l.mgmt;
+  document.getElementById('m-welcome').value = l.welcome;
+  document.getElementById('m-slug').value = l.slug;
+  document.getElementById('link-modal').classList.add('open');
+}
+
+function saveLink() {
+  const celeb = document.getElementById('m-celeb').value.trim();
+  const mgmt = document.getElementById('m-mgmt').value.trim();
+  const welcome = document.getElementById('m-welcome').value.trim();
+  const slug = document.getElementById('m-slug').value.trim().toLowerCase();
+  if (!celeb || !slug) return toast('⚠️ Celebrity name and slug are required');
+  
+  if (S.editingLinkId) {
+    const l = S.links.find(x => x.id === S.editingLinkId);
+    Object.assign(l, { celeb, mgmt, welcome, slug });
+  } else {
+    S.links.push({ id: slug, celeb, mgmt, welcome, slug, status: 'active', fans: [] });
+  }
+  closeModal();
+  renderLinks();
+  toast('✅ Saved!');
+}
+
+function closeModal() {
+  document.getElementById('link-modal').classList.remove('open');
+}
+
+// FANS
+function renderFans() {
+  const container = document.getElementById('fans-container');
+  const allFans = [];
+  S.links.forEach(l => {
+    l.fans.forEach(f => allFans.push({ ...f, celeb: l.celeb, linkId: l.id }));
+  });
+
+  if (!allFans.length) {
+    container.innerHTML = '<div style="text-align:center;padding:60px;color:#888">No fans yet. Share your links!</div>';
+    return;
+  }
+
+  let html = `<table class="fans-table"><thead><tr><th>Fan</th><th>Celebrity</th><th>Location</th><th>Purpose</th><th></th></tr></thead><tbody>`;
+  allFans.forEach(f => {
+    html += `<tr>
+      <td><div class="fan-name-cell"><div class="fan-avatar">${f.name[0]}</div><div>${f.name}</div></div></td>
+      <td>${f.celeb}</td>
+      <td>${f.answers.location || '—'}</td>
+      <td style="max-width:200px">${f.answers.purpose ? f.answers.purpose.substring(0,60) + '...' : '—'}</td>
+      <td><button class="btn btn-outline btn-sm" onclick="openAdminChat('${f.linkId}','${f.id}')">💬 Chat</button></td>
+    </tr>`;
+  });
+  html += '</tbody></table>';
+  container.innerHTML = html;
+}
+
+function openAdminChat(linkId, fanId) {
+  const link = S.links.find(l => l.id === linkId);
+  const fan = link.fans.find(f => f.id === fanId);
+  S.activeLinkId = linkId;
+  S.activeFanId = fanId;
+
+  document.getElementById('chat-fan-name').textContent = fan.name;
+  document.getElementById('chat-fan-sub').textContent = `${link.celeb} • ${fan.answers.location || ''}`;
+  document.getElementById('chat-mgmt-pill').textContent = link.mgmt;
+
+  renderAdminMsgs(fan.messages);
+  showScreen('screen-chat');
+}
+
+function renderAdminMsgs(msgs) {
+  const container = document.getElementById('chat-messages');
+  container.innerHTML = msgs.map(m => {
+    if (m.from === 'system') return `<div class="sys-msg">${m.text}</div>`;
+    const isManager = m.from === 'manager';
+    return `<div class="msg ${isManager ? 'from-manager' : 'from-fan'}">
+      <div class="msg-avatar">${isManager ? '★' : '👤'}</div>
+      <div><div class="msg-bubble">${m.text}</div><div class="msg-time">${m.time}</div></div>
+    </div>`;
+  }).join('');
+}
+
+function sendManagerMsg() {
+  const input = document.getElementById('chat-input');
+  const text = input.value.trim();
+  if (!text) return;
+  const link = S.links.find(l => l.id === S.activeLinkId);
+  const fan = link.fans.find(f => f.id === S.activeFanId);
+  fan.messages.push({ from: 'manager', text, time: now() });
+  input.value = '';
+  renderAdminMsgs(fan.messages);
+}
+
+// FAN FLOW
+function showFanLanding(link) {
+  document.getElementById('fan-celeb-display').textContent = link.celeb;
+  document.getElementById('fan-mgmt-display').textContent = link.mgmt;
+  document.getElementById('fan-welcome-text').textContent = link.welcome;
+  showScreen('screen-fan-landing');
+}
+
+function startFanQuiz() {
+  S.quizStep = 0;
+  S.quizAnswers = {};
+  renderQuizStep();
+  showScreen('screen-fan-quiz');
+}
+
+function renderQuizStep() {
+  const step = S.quizStep;
+  const q = QUIZ[step];
+  document.getElementById('quiz-fill').style.width = ((step + 1) / QUIZ.length * 100) + '%';
+  document.getElementById('quiz-step-label').textContent = `Step ${step + 1} of ${QUIZ.length}`;
+
+  const body = document.getElementById('quiz-body');
+  let html = `<div class="quiz-q">${q.q}</div>`;
+
+  if (q.type === 'options') {
+    html += `<div class="quiz-options">`;
+    q.opts.forEach(opt => {
+      html += `<button class="quiz-option" onclick="pickOption(this, '${opt}')">${opt}</button>`;
+    });
+    html += `</div>`;
+  } else {
+    html += `<div class="field"><input type="text" id="qinp" placeholder="Type here..." oninput="onQInput()"></div>`;
+  }
+
+  html += `<button class="btn btn-gold btn-full" id="qnxt" onclick="nextQ()" style="opacity:0.4;pointer-events:none">Next →</button>`;
+  body.innerHTML = html;
+}
+
+function pickOption(el, val) {
+  document.querySelectorAll('.quiz-option').forEach(b => b.classList.remove('selected'));
+  el.classList.add('selected');
+  S.quizAnswers[QUIZ[S.quizStep].key] = val;
+  enableNext();
+}
+
+function onQInput() {
+  if (document.getElementById('qinp').value.trim()) enableNext();
+  else disableNext();
+}
+
+function enableNext() {
+  const btn = document.getElementById('qnxt');
+  btn.style.opacity = '1';
+  btn.style.pointerEvents = 'auto';
+}
+
+function disableNext() {
+  const btn = document.getElementById('qnxt');
+  btn.style.opacity = '0.4';
+  btn.style.pointerEvents = 'none';
+}
+
+function nextQ() {
+  const q = QUIZ[S.quizStep];
+  if (q.type === 'text') {
+    const val = document.getElementById('qinp').value.trim();
+    if (!val) return;
+    S.quizAnswers[q.key] = val;
+    if (q.key === 'name') S.fanName = val;
+  }
+  S.quizStep++;
+  if (S.quizStep >= QUIZ.length) completeFanSignup();
+  else renderQuizStep();
 }
 
 function completeFanSignup() {
   const link = S.links.find(l => l.id === S.fanLinkId);
+  if (!link) return;
+
   const fanId = 'f' + Date.now();
-  const fanName = S.fanName || S.quizAnswers.name || 'Fan';
+  const fanName = S.fanName || S.quizAnswers.name || 'New Fan';
 
   const newFan = {
     id: fanId,
     name: fanName,
     joinedAt: 'Just now',
-    answers: {...S.quizAnswers},
+    answers: { ...S.quizAnswers },
     messages: [
-      {from:'system', text: `${fanName} joined the ${link.celeb} management chat.`, time: now()},
-      {from:'manager', text: `Welcome ${fanName}! 🌟 You're now connected...`, time: now()}
+      { from: 'system', text: `${fanName} joined the chat.`, time: now() },
+      { from: 'manager', text: `Welcome ${fanName}! Thank you for reaching out.`, time: now() }
     ]
   };
 
@@ -98,17 +639,56 @@ function completeFanSignup() {
   S.fanId = fanId;
   S.fanName = fanName;
 
-  // Save fan session
-  localStorage.setItem(getFanKey(), JSON.stringify(newFan));
-
-  saveData();
   document.getElementById('fan-chat-title').textContent = `${link.celeb} — ${link.mgmt}`;
   renderFanChatMsgs(newFan.messages);
   showScreen('screen-fan-chat');
 }
 
-// Save data after every important action
-// (You can add saveData() in sendManagerMsg, sendFanMsg, saveLink, etc.)
+function renderFanChatMsgs(msgs) {
+  const container = document.getElementById('fan-chat-messages');
+  container.innerHTML = msgs.map(m => {
+    const isManager = m.from === 'manager';
+    return `<div class="msg ${isManager ? 'from-manager' : 'from-fan'}">
+      <div class="msg-avatar">${isManager ? '★' : '👤'}</div>
+      <div><div class="msg-bubble">${m.text}</div><div class="msg-time">${m.time}</div></div>
+    </div>`;
+  }).join('');
+  container.scrollTop = container.scrollHeight;
+}
+
+function sendFanMsg() {
+  const input = document.getElementById('fan-chat-input');
+  const text = input.value.trim();
+  if (!text) return;
+
+  const link = S.links.find(l => l.id === S.fanLinkId);
+  const fan = link.fans.find(f => f.id === S.fanId);
+  if (fan) {
+    fan.messages.push({ from: 'fan', text, time: now() });
+    renderFanChatMsgs(fan.messages);
+    input.value = '';
+  }
+}
+
+function autoResize(el) {
+  el.style.height = 'auto';
+  el.style.height = Math.min(el.scrollHeight, 120) + 'px';
+}
+
+// INIT
+function init() {
+  const hash = window.location.hash.slice(1);
+  if (hash.startsWith('fan/')) {
+    const slug = hash.replace('fan/', '');
+    const link = S.links.find(l => l.slug === slug && l.status === 'active');
+    if (link) {
+      S.fanLinkId = link.id;
+      showFanLanding(link);
+      return;
+    }
+  }
+  showScreen('screen-login');
+}
 
 init();
 </script>
